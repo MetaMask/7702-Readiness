@@ -247,47 +247,58 @@ export const DiscoverWalletProviders = () => {
                                         <thead>
                                             <tr>
                                                 <td className="value">Txn No.</td>
-                                                <td>Address</td>
+                                                <td></td>
                                                 <td>Value (Wei)</td>
+                                                <td></td>
+                                                <td>Address</td>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr>
                                                 <td>1.</td>
-                                                <td>
-                                                    <input
-                                                        className="address"
-                                                        type="text"
-                                                        value={add1}
-                                                        onChange={(e) => handleAddressChange(1, e)}
-                                                    /></td>
+                                                <td>Send</td>
                                                 <td>
                                                     <input
                                                         className="value"
                                                         type="text"
                                                         value={val1}
                                                         onChange={(e) => handleValueChange(1, e)}
-                                                    /></td>
-                                            </tr>
-                                            <tr>
-                                                <td>2.</td>
+                                                    />
+                                                </td>
+                                                <td>to</td>
                                                 <td>
                                                     <input
                                                         className="address"
                                                         type="text"
-                                                        value={add2}
-                                                        onChange={(e) => handleAddressChange(2, e)}
-                                                    /></td>
+                                                        value={add1}
+                                                        onChange={(e) => handleAddressChange(1, e)}
+                                                    />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>2.</td>
+                                                <td>Send</td>
                                                 <td>
                                                     <input
                                                         className="value"
                                                         type="text"
                                                         value={val2}
                                                         onChange={(e) => handleValueChange(2, e)}
-                                                    /></td>
+                                                    />
+                                                </td>
+                                                <td>to</td>
+                                                <td>
+                                                    <input
+                                                        className="address"
+                                                        type="text"
+                                                        value={add2}
+                                                        onChange={(e) => handleAddressChange(2, e)}
+                                                    />
+                                                </td>
                                             </tr>
                                         </tbody>
                                     </table>
+                                    <br/>
                                     {processingTxn ?
                                         <>
                                             <div>Transaction in progress</div>
