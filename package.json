@@ -1,8 +1,12 @@
 {
   "name": "7702-readiness",
-  "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "type": "module",
+  "description": "A dapp to test 7702/5792 functionality of MetaMask on a chain that supports it",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mario-christopher/7702-Readiness"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
