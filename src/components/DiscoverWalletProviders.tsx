@@ -35,8 +35,8 @@ export const DiscoverWalletProviders = () => {
 
             setAdd1("0xdC659bF818f5Bc99DC672C746850e2BEBbA7D87d");
             setAdd2("0x72DAcE9babA0561934a00F012ea2Df5082cd9052");
-            setVal1("0x0");
-            setVal2("0x0");
+            setVal1("0");
+            setVal2("0");
             setConnectStatus("Wallet Connected");
 
             (providerWithInfo.provider as any).on("accountsChanged", handleAccountChanged);
@@ -98,11 +98,11 @@ export const DiscoverWalletProviders = () => {
                     calls: [
                         {
                             to: add1,
-                            value: val1,
+                            value: `0x${val1}`,
                         },
                         {
                             to: add2,
-                            value: val2,
+                            value: `0x${val2}`,
                         }
                     ],
                 }]
@@ -221,7 +221,7 @@ export const DiscoverWalletProviders = () => {
                                         </tr>
                                         <tr>
                                             <td className="hdrCol">Is Smart Account</td>
-                                            <td className="dtlCol">{isSmartEoa.toString()}</td>
+                                            <td className="dtlCol">{isSmartEoa ? "Yes" : "No"}</td>
                                         </tr>
                                         <tr>
                                             <td className="hdrCol">Selected Chain</td>
@@ -248,7 +248,7 @@ export const DiscoverWalletProviders = () => {
                                             <tr>
                                                 <td className="value">Txn No.</td>
                                                 <td>Address</td>
-                                                <td>Value</td>
+                                                <td>Value (Wei)</td>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -295,7 +295,7 @@ export const DiscoverWalletProviders = () => {
                                         </>
                                         :
                                         <button onClick={() => handleSendCalls()} >
-                                            Send sample batch txns
+                                            Send 2 transactions in a batch
                                         </button>
                                     }
                                 </div>
@@ -311,8 +311,10 @@ export const DiscoverWalletProviders = () => {
                 </div> :
                 <div>Please install MetaMask wallet extension and then continue.</div>
             }
-            <hr/>
-            <div></div>
+            <hr />
+            <div className="source">
+                Source : <a href="https://github.com/mario-christopher/7702-Readiness" target="_blank">GitHub</a>
+            </div>
         </>
     )
 }
