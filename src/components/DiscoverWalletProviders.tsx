@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useSyncProviders } from "../hooks/useSyncProviders"
-import { BATCH_TXN_5792, formatChainAsNum } from "../utils"
+import { BATCH_TXN_5792, CHAINLIST_INFO_API, formatChainAsNum } from "../utils"
 import { ethers } from "ethers";
 
 export const DiscoverWalletProviders = () => {
@@ -10,6 +10,7 @@ export const DiscoverWalletProviders = () => {
     const [chainName, setChainName] = useState<string>("")
     const [refresh, setRefresh] = useState<boolean>(false)
     const [capabilities, setCapabilities] = useState<string[]>([])
+    const [explorerUrl, setExplorerUrl] = useState<string>("")
     const [isSmartEoa, setIsSmartEoa] = useState<boolean>(false)
     const [supportAtomic, setSupportAtomic] = useState<boolean>(false)
     const [isConnectDisabled, setConnectDisabled] = useState<boolean>(false)
@@ -66,6 +67,7 @@ export const DiscoverWalletProviders = () => {
             setChainName("");
             setCapabilities([]);
             setConnectStatus("Connect Wallet");
+            setExplorerUrl("");
         } catch (error) {
             console.error(error)
         }
@@ -83,10 +85,12 @@ export const DiscoverWalletProviders = () => {
 
     const handleRefresh = async () => {
         setRefresh(false);
+        setExplorerUrl("");
         await updateStuff(provider as EIP1193Provider, userAccount);
     }
 
     const handleSendCalls = async () => {
+        setExplorerUrl("");
         try {
             const res = await provider?.request({
                 method: 'wallet_sendCalls',
@@ -117,6 +121,14 @@ export const DiscoverWalletProviders = () => {
                     params: [res.id]
                 }) as any;
                 if (status.status == 200) {
+                    const chainListData = await fetch(CHAINLIST_INFO_API);
+                    const chainListJson: any[] = await chainListData.json();
+                    const chainInfo = chainListJson.find((c: any) => c.chainId == chainId);
+                    const baseExplorerUrl = chainInfo["explorers"][0]["url"];
+                    const txnHash = status["receipts"][0]["transactionHash"]
+                    const explorerUrl = `${baseExplorerUrl}/tx/${txnHash}`
+                    setExplorerUrl(explorerUrl);
+
                     const ethersProvider = new ethers.BrowserProvider(mmProvider?.provider as EIP1193Provider);
                     const eoaCode = await ethersProvider.getCode(userAccount);
                     setIsSmartEoa(eoaCode != "0x");
@@ -191,6 +203,7 @@ export const DiscoverWalletProviders = () => {
                 <path fill="#BAF24A" d="M77.07 110.049H64.442l-4.852 5.379 2.415 8.808h17.489l2.415-8.808-4.852-5.379h.015Zm.7 11.93H63.75l-1.64-5.972 3.317-3.679h10.666l3.317 3.679-1.64 5.972ZM58.26 90.807l-.211-.55v-.014l-3.739-9.689H44.2l-4.723 4.619v2.324l16.676 4.122 2.106-.812Zm-13.142-7.989h7.643l2.4 6.214-13.104-3.235 3.054-2.978h.007Zm40.228 8.802 16.677-4.121v-2.325l-4.724-4.61h-10.11l-3.738 9.68v.015l-.211.55 2.106.812Zm14.09-5.822-13.104 3.235 2.4-6.22h7.642l3.054 2.986h.007Z" />
             </svg>
             <h2>7702/5792 Readiness</h2>
+            <div><small><i>Requires MetaMask ver. &gt;= v12.17.0</i></small></div>
             <hr />
 
             {mmProvider ?
@@ -309,6 +322,10 @@ export const DiscoverWalletProviders = () => {
                                         <button onClick={() => handleSendCalls()} >
                                             Send 2 transactions in a batch
                                         </button>
+                                    }
+                                    {
+                                        (explorerUrl.length > 0) &&
+                                        <div>Success : <a href={explorerUrl} target="_blank">View on block explorer</a></div>
                                     }
                                 </div>
                             }
